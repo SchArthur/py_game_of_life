@@ -2,6 +2,13 @@ import pygame
 from grid import Grid
 from cell import *
 
+"""
+PYTHON GAME OF LIFE BY SCHARTHUR
+CLICK -> place une cellule
+SPACEBAR -> lance la simulation
+A -> avance d'une frame
+"""
+
 size_x = 1280
 size_y = 780
 
@@ -35,11 +42,13 @@ class newGame:
                         self.running = False
                     if event.key == pygame.K_SPACE:
                         self.autoPlay = not self.autoPlay
+                if event.type == pygame.KEYUP:
+                    if (event.key == pygame.K_a) and not self.autoPlay:
+                        self.CellGrid.UpdateAll()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     mouse_click_coords = (pos[0]//tilesize,pos[1]//tilesize)
                     cell_key = str(str(mouse_click_coords[0]) + ',' + str(mouse_click_coords[1]))
-                    print(cell_key)
                     self.cell_list[cell_key].changeStatus()
 
             # AUTOPLAY
