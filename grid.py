@@ -2,6 +2,7 @@ import pygame
 
 class Grid:
     def __init__(self, X, Y, tileSize) -> None:
+        self.matrice = []
         self.tileSize = tileSize
         self.sizeX = X
         self.sizeY = Y
