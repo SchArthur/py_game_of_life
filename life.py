@@ -9,7 +9,7 @@ SPACEBAR -> lance la simulation
 A -> avance d'une frame
 """
 
-menu_width = 500
+menu_width = 0
 
 class newGame:
     def __init__(self, gameSpeed = 100) -> None:
