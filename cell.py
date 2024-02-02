@@ -15,9 +15,9 @@ class cellGrid:
             self.cell_dict[key] = newCell((coords[0],coords[1]), False)
             self.cell_dict[key].isAlive = True
 
-    def drawAll(self, screen, tileSize, color = '#999999'):
+    def drawAll(self, screen, tileSize, offset, color = '#999999'):
         for key in self.cell_dict:
-            self.cell_dict[key].draw(screen, tileSize, color)
+            self.cell_dict[key].draw(screen, tileSize, offset, color)
     
     def UpdateAll(self):
         key_del = []
@@ -84,9 +84,9 @@ class newCell:
         self.coords = coords
         self.isAlive = isAlive
         
-    def draw(self, screen, tileSize, color = '#111111'):
+    def draw(self, screen, tileSize, offset, color = '#111111'):
         if self.isAlive:
-            cell_rect = pygame.Rect(self.coords[0]*tileSize, self.coords[1]*tileSize, tileSize, tileSize)
+            cell_rect = pygame.Rect((self.coords[0]+offset[0])*tileSize, (self.coords[1]+offset[1])*tileSize, tileSize, tileSize)
             pygame.draw.rect(screen, color, cell_rect)
 
     def getCoords(self):
