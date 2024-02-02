@@ -70,7 +70,7 @@ class newGame:
             # GAME RENDER
             game_surface.fill("white")
             self.grd.draw(game_surface, self.tilesize)
-            self.CellGrid.drawAll(game_surface, self.tilesize)
+            self.CellGrid.drawAll(game_surface, self.tilesize, self.cell_color)
                                 
             # flip() the display to put your work on screen
             pygame.Surface.blit(screen,game_surface,(0,0),game_surface.get_rect())
