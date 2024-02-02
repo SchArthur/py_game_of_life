@@ -46,6 +46,7 @@ class newGame:
                     if (event.key == pygame.K_a) and not self.autoPlay:
                         self.CellGrid.UpdateAll()
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.autoPlay = False
                     pos = pygame.mouse.get_pos()
                     mouse_click_coords = (pos[0]//tilesize,pos[1]//tilesize)
                     cell_key = str(str(mouse_click_coords[0]) + ',' + str(mouse_click_coords[1]))
