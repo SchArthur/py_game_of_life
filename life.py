@@ -7,6 +7,8 @@ size_y = 780
 
 tilesize = 20
 
+tiles_offgrid = 20
+
 class newGame:
     def __init__(self, gameSpeed = 100) -> None:
         pygame.init()
@@ -14,7 +16,7 @@ class newGame:
         self.running = True
         self.autoPlay = False
         self.grd = Grid(size_x, size_y, tilesize)
-        self.CellGrid = cellGrid(size_x, size_y, tilesize)
+        self.CellGrid = cellGrid(size_x, size_y, tilesize, tiles_offgrid)
         self.cell_list = self.CellGrid.returnList()
         self.run()
 
@@ -37,6 +39,7 @@ class newGame:
                     pos = pygame.mouse.get_pos()
                     mouse_click_coords = (pos[0]//tilesize,pos[1]//tilesize)
                     cell_key = str(str(mouse_click_coords[0]) + ',' + str(mouse_click_coords[1]))
+                    print(cell_key)
                     self.cell_list[cell_key].changeStatus()
 
             # AUTOPLAY

@@ -1,10 +1,10 @@
 import pygame
 
 class cellGrid:
-    def __init__(self, width, height,tilesize):
+    def __init__(self, width, height,tilesize, offgrid = 15):
         self.cell_list = {}
-        for i in range(width//tilesize):
-            for j in range(height//tilesize):
+        for i in range(-offgrid,width//tilesize + offgrid):
+            for j in range(-offgrid,height//tilesize + offgrid):
                 self.cell_list[str(str(i) + ',' + str(j))] = newCell((i,j), False)
     def returnList(self):
         return self.cell_list
