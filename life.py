@@ -7,8 +7,6 @@ size_y = 780
 
 tilesize = 20
 
-
-
 class newGame:
     def __init__(self, gameSpeed = 100) -> None:
         pygame.init()
@@ -27,7 +25,6 @@ class newGame:
 
         while self.running:
             # poll for events
-            # pygame.QUIT event means the user clicked X to close your window
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -36,14 +33,13 @@ class newGame:
                         self.running = False
                     if event.key == pygame.K_SPACE:
                         self.autoPlay = not self.autoPlay
-                    
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     mouse_click_coords = (pos[0]//tilesize,pos[1]//tilesize)
                     cell_key = str(str(mouse_click_coords[0]) + ',' + str(mouse_click_coords[1]))
                     self.cell_list[cell_key].changeStatus()
 
-            
+            # AUTOPLAY
             if self.autoPlay:
                 self.cell_color = '#111111'
                 next_move += dt
@@ -52,16 +48,13 @@ class newGame:
                     next_move = -self.gameSpeed
             else:
                 self.cell_color = '#999999'
-            # fill the screen with a color to wipe away anything from last frame
+
+            # GAME RENDER
             screen.fill("white")
             self.grd.draw(screen)
             for key in self.cell_list:
                 self.cell_list[key].draw(screen, tilesize, self.cell_color)
-
-            # RENDER YOUR GAME HERE
-            
-                    
-
+                                
             # flip() the display to put your work on screen
             pygame.display.flip()
 
