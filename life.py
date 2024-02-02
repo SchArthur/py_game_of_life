@@ -9,26 +9,27 @@ SPACEBAR -> lance la simulation
 A -> avance d'une frame
 """
 
-size_x = 1280
-size_y = 780
+menu_width = 500
 
-tilesize = 20
-
-tiles_offgrid = 20
+tiles_offgrid = 1
 
 class newGame:
     def __init__(self, gameSpeed = 100) -> None:
         pygame.init()
+        self.tilesize = 20
+        self.screen_width = pygame.display.get_desktop_sizes()[0][0]
+        self.screen_height = pygame.display.get_desktop_sizes()[0][1]
+        self.game_width = self.screen_width - menu_width
         self.gameSpeed = gameSpeed
         self.running = True
         self.autoPlay = False
-        self.grd = Grid(size_x, size_y, tilesize)
-        self.CellGrid = cellGrid(size_x, size_y, tilesize, tiles_offgrid)
-        self.cell_list = self.CellGrid.returnList()
+        self.grd = Grid(self.game_width, self.screen_height)
+        self.CellGrid = cellGrid(self.game_width, self.screen_height, self.tilesize, tiles_offgrid)
         self.run()
 
     def run(self):
-        screen = pygame.display.set_mode((size_x, size_y))
+        screen = pygame.display.set_mode((self.screen_width, self.screen_height),pygame.NOFRAME)
+        game_surface = pygame.Surface((self.game_width, self.screen_height))
         clock = pygame.time.Clock()
         next_move = 0
 
@@ -42,15 +43,21 @@ class newGame:
                         self.running = False
                     if event.key == pygame.K_SPACE:
                         self.autoPlay = not self.autoPlay
+                    if event.key == pygame.K_r:
+                        print(self.CellGrid.returnDict())
                 if event.type == pygame.KEYUP:
                     if (event.key == pygame.K_a) and not self.autoPlay:
                         self.CellGrid.UpdateAll()
+                if event.type == pygame.MOUSEWHEEL:
+                    self.tilesize += event.y
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.autoPlay = False
-                    pos = pygame.mouse.get_pos()
-                    mouse_click_coords = (pos[0]//tilesize,pos[1]//tilesize)
-                    cell_key = str(str(mouse_click_coords[0]) + ',' + str(mouse_click_coords[1]))
-                    self.cell_list[cell_key].changeStatus()
+                    if pygame.mouse.get_pressed()[0] :
+                        pos = pygame.mouse.get_pos()
+                        if game_surface.get_rect().collidepoint(pos):
+                            self.autoPlay = False
+                            mouse_click_coords = (pos[0]//self.tilesize,pos[1]//self.tilesize)
+                            cell_key = str(str(mouse_click_coords[0]) + ',' + str(mouse_click_coords[1]))
+                            self.CellGrid.appendCell(mouse_click_coords)
 
             # AUTOPLAY
             if self.autoPlay:
@@ -63,12 +70,12 @@ class newGame:
                 self.cell_color = '#999999'
 
             # GAME RENDER
-            screen.fill("white")
-            self.grd.draw(screen)
-            for key in self.cell_list:
-                self.cell_list[key].draw(screen, tilesize, self.cell_color)
+            game_surface.fill("white")
+            self.grd.draw(game_surface, self.tilesize)
+            self.CellGrid.drawAll(game_surface, self.tilesize)
                                 
             # flip() the display to put your work on screen
+            pygame.Surface.blit(screen,game_surface,(0,0),game_surface.get_rect())
             pygame.display.flip()
 
             dt = clock.tick(60)  # limits FPS to 60
