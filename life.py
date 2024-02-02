@@ -11,8 +11,6 @@ A -> avance d'une frame
 
 menu_width = 500
 
-tiles_offgrid = 1
-
 class newGame:
     def __init__(self, gameSpeed = 100) -> None:
         pygame.init()
@@ -24,7 +22,7 @@ class newGame:
         self.running = True
         self.autoPlay = False
         self.grd = Grid(self.game_width, self.screen_height)
-        self.CellGrid = cellGrid(self.game_width, self.screen_height, self.tilesize, tiles_offgrid)
+        self.CellGrid = cellGrid()
         self.run()
 
     def run(self):

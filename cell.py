@@ -1,7 +1,7 @@
 import pygame
 
 class cellGrid:
-    def __init__(self, width, height,tilesize, offgrid = 15):
+    def __init__(self):
         self.cell_dict = {}
 
     def returnDict(self):
