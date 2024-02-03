@@ -10,7 +10,7 @@ A -> avance d'une frame
 ZQSD/ARROWS -> deplacer la camera
 """
 
-menu_width = 500
+menu_width = 0
 
 min_tilesize = 10
 max_tilesize = 40
