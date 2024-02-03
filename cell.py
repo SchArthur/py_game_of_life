@@ -1,24 +1,57 @@
 import pygame
 
 class cellGrid:
-    def __init__(self, width, height,tilesize, offgrid = 15):
-        self.cell_list = {}
-        for i in range(-offgrid,width//tilesize + offgrid):
-            for j in range(-offgrid,height//tilesize + offgrid):
-                self.cell_list[str(str(i) + ',' + str(j))] = newCell((i,j), False)
-    def returnList(self):
-        return self.cell_list
+    def __init__(self):
+        self.cell_dict = {}
+
+    def returnDict(self):
+        return self.cell_dict
+    
+    def appendCell(self, coords):
+        key = str(str(coords[0]) + ',' + str(coords[1]))
+        if key in self.cell_dict:
+            del self.cell_dict[key]
+        else:
+            self.cell_dict[key] = newCell((coords[0],coords[1]), False)
+            self.cell_dict[key].isAlive = True
+
+    def drawAll(self, screen, tileSize, offset, color = '#999999'):
+        for key in self.cell_dict:
+            self.cell_dict[key].draw(screen, tileSize, offset, color)
     
     def UpdateAll(self):
-        for key in self.cell_list:
-            self.Update(self.cell_list[key])
-        for key in self.cell_list:
-            if self.cell_list[key].willDie:
-                self.cell_list[key].isAlive = False
-                self.cell_list[key].willDie = False
-            if self.cell_list[key].willLive:
-                self.cell_list[key].isAlive = True
-                self.cell_list[key].willLive = False
+        key_del = []
+        affectedDict = self.returnAffectedDict()
+        affectedDict.update(self.cell_dict)
+        for key in affectedDict:
+            self.Update(affectedDict[key])
+        for key in affectedDict:
+            if affectedDict[key].willDie:
+                affectedDict[key].isAlive = False
+                affectedDict[key].willDie = False
+            if affectedDict[key].willLive:
+                affectedDict[key].isAlive = True
+                affectedDict[key].willLive = False
+        self.cell_dict.update(affectedDict)
+        for key in self.cell_dict:
+            if not self.cell_dict[key].isAlive:
+                key_del.append(key)
+        for x in key_del:
+            if x in self.cell_dict:
+                del self.cell_dict[x]
+
+
+    def returnAffectedDict(self) -> dict:
+        # Renvoi le dict de toutes les cases affectées par le jeu lors de la prochaine frame
+        deadCells = {}
+        for key in self.cell_dict:
+            cell_pos = self.cell_dict[key].getCoords()
+            for i in range(-1,2):
+                for j in range(-1,2):
+                    neighboorKey = str(str(i + cell_pos[0]) + ',' + str(j + cell_pos[1]))
+                    if neighboorKey not in self.cell_dict:
+                        deadCells[neighboorKey] = newCell((i + cell_pos[0], j + cell_pos[1]), False)
+        return deadCells
         
     def Update(self, cell):
         neighboorsAlive = 0
@@ -27,7 +60,7 @@ class cellGrid:
             for j in range(-1,2):
                 if ((i != 0) or (j != 0)):
                     try:
-                        if self.cell_list[str(str(i + cell_pos[0]) + ',' + str(j + cell_pos[1]))].isAlive:
+                        if self.cell_dict[str(str(i + cell_pos[0]) + ',' + str(j + cell_pos[1]))].isAlive:
                             neighboorsAlive += 1
                     except:
                         neighboorsAlive +=0
@@ -51,9 +84,9 @@ class newCell:
         self.coords = coords
         self.isAlive = isAlive
         
-    def draw(self, screen, tileSize, color = '#111111'):
+    def draw(self, screen, tileSize, offset, color = '#111111'):
         if self.isAlive:
-            cell_rect = pygame.Rect(self.coords[0]*tileSize, self.coords[1]*tileSize, tileSize, tileSize)
+            cell_rect = pygame.Rect((self.coords[0]+offset[0])*tileSize, (self.coords[1]+offset[1])*tileSize, tileSize, tileSize)
             pygame.draw.rect(screen, color, cell_rect)
 
     def getCoords(self):

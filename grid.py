@@ -1,14 +1,13 @@
 import pygame
 
 class Grid:
-    def __init__(self, X, Y, tileSize) -> None:
+    def __init__(self, X, Y) -> None:
         self.matrice = []
-        self.tileSize = tileSize
         self.sizeX = X
         self.sizeY = Y
 
-    def draw(self, screen, grid_color='#EFEFEF'):
+    def draw(self, screen, tileSize, grid_color='#EFEFEF'):
         for i in range(1,self.sizeX):
-            pygame.draw.line(screen,grid_color, (self.tileSize*i, 0), (self.tileSize*i, self.tileSize*self.sizeX))
+            pygame.draw.line(screen,grid_color, (tileSize*i, 0), (tileSize*i, tileSize*self.sizeX))
         for i in range(0,self.sizeY):
-            pygame.draw.line(screen,grid_color, (0, self.tileSize*i), (self.tileSize*self.sizeX, self.tileSize*i))
+            pygame.draw.line(screen,grid_color, (0, tileSize*i), (tileSize*self.sizeX, tileSize*i))
